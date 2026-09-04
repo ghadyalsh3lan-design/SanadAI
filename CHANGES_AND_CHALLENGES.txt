@@ -1,0 +1,308 @@
+===============================================================================
+SanadAI / RFP Intelligence — Features Added & Challenges
+===============================================================================
+A running log of the enhancements made to the project and the problems solved
+along the way. Grouped by area; each item notes the main files touched.
+
+
+-------------------------------------------------------------------------------
+1. MULTI-PROVIDER LLM SUPPORT
+-------------------------------------------------------------------------------
+What was added:
+  - A central LLM factory: config.get_llm() picks the provider from the
+    LLM_PROVIDER env var. Supported: groq, anthropic, openai, gemini, local.
+  - "local" uses ChatOpenAI pointed at an OpenAI-compatible server (Ollama /
+    LM Studio / llama.cpp / vLLM) with the model left empty and a configurable
+    LOCAL_BASE_URL / LOCAL_API_KEY.
+  - Provider packages are imported lazily, so only the one in use must be
+    installed. All generation code (generator, verifier, pre_bid, proposal,
+    judge, evaluation) calls config.get_llm() instead of hardcoding ChatGroq.
+  - .env.example documents every provider key.
+
+Files: src/config.py, src/generation/*, src/analysis/pre_bid.py,
+       src/drafting/proposal.py, evaluation/*, requirements.txt, .env.example
+
+Challenges:
+  - The codebase was hardwired to Groq (ChatGroq) in many modules; had to route
+    every call site through one factory without breaking signatures.
+  - Some providers/local servers don't reliably support structured output, which
+    influenced later parsing decisions (see the LLM judge section).
+
+
+-------------------------------------------------------------------------------
+2. INCOMING-RFP LIBRARY (Analyze + Draft)
+-------------------------------------------------------------------------------
+What was added:
+  - Incoming RFPs are uploaded once, saved to data/incoming_rfps/, and then
+    selectable from a list on both the Analyze and Draft pages (no need to
+    re-upload each time).
+  - Endpoints: GET/POST /rfps, DELETE /rfps/{filename},
+    POST /rfps/{filename}/analyze, POST /rfps/{filename}/draft (+ /section).
+  - RFP files are also indexed into the vector store (source_type=incoming_rfp)
+    so they can be searched on the Ask page, with a startup backfill for files
+    saved before indexing existed.
+
+Files: src/ingestion/rfp_service.py (new), src/api/main.py,
+       frontend/src/pages/Analyze.jsx, Draft.jsx, src/api.js
+
+Challenges:
+  - Path-traversal safety on user-supplied filenames (sanitized to a basename).
+  - Re-uploads generate a new doc_id each parse, so re-indexing must first delete
+    the old chunks for that filename to avoid duplicates.
+
+
+-------------------------------------------------------------------------------
+3. BID / NO-BID RECOMMENDATION (Analyze)
+-------------------------------------------------------------------------------
+What was added:
+  - On top of the existing requirement-coverage + clarifying-questions report,
+    a high-level recommendation: Bid / No Bid / Bid with Risks, with a
+    confidence score, strengths, risks, missing requirements, an 8-area detailed
+    assessment, and a summary.
+  - Fed from a broad company-KB retrieval + one structured LLM call. Rendered as
+    a colored banner; included in the Word export.
+  - The Analyze results were reorganized into tabs (Recommendation / Coverage /
+    Questions) to reduce clutter, plus an always-visible "What this analysis
+    evaluates" panel listing the 8 criteria.
+
+Files: src/analysis/pre_bid.py, src/drafting/export.py,
+       frontend/src/pages/Analyze.jsx, components/AnalysisReport.jsx (new)
+
+Challenges:
+  - Keeping the rich existing coverage analysis while adding the new layer
+    without doubling the page length (solved with tabs).
+  - Extracting a shared, read-only report renderer so the Workspace viewer and
+    the Analyze page don't duplicate layout.
+
+
+-------------------------------------------------------------------------------
+4. ASK PAGE OVERHAUL
+-------------------------------------------------------------------------------
+What was added:
+  - Filters: by category (doc_type) and by specific document; plus incoming RFPs
+    as selectable sources (include_rfps).
+  - Configurable top-k (1-20).
+  - Chat history: sessions saved to data/chat_sessions.json, listed in a
+    sidebar, loadable/deletable; auto-saved after each exchange.
+  - LLM-as-a-judge "Evaluate" button per answer: scores faithfulness, relevance,
+    completeness, groundedness, citation quality, hallucination — shown as
+    metric bars + summary + recommendations.
+  - Suggested starter questions on an empty chat.
+  - Per-citation relevance % shown on each source.
+  - Removed the "Verify answer" checkbox; added a hint to use filters for better
+    answers.
+  - Conversational memory (see section 8).
+
+Files: src/api/main.py, src/generation/judge.py (new), src/chat/chat_service.py
+       (new), frontend/src/pages/Ask.jsx, src/api.js, components/ui.jsx
+
+Challenges:
+  - Chroma metadata filters need an explicit $and when combining conditions.
+  - The relevance gate (threshold 0.4) refused broad questions like "what is
+    this file for?" when scoped to one file — relaxed the gate when the user
+    explicitly selects documents/categories.
+
+
+-------------------------------------------------------------------------------
+5. WORKSPACE / DASHBOARD
+-------------------------------------------------------------------------------
+What was added:
+  - "Save to bids" now stores the FULL analysis (recommendation, coverage,
+    questions, compliance decisions) on the bid, viewable later via an eye-icon
+    modal in the Workspace.
+  - Save is idempotent: the backend upserts by RFP filename, so re-saving the
+    same RFP updates the bid instead of creating duplicates.
+  - The Analyze result persists in the browser session (survives navigation).
+  - Dashboard "Win rate" and the active/won/lost summary are now computed live
+    from workspace bids (was hardcoded "68%").
+
+Files: src/workspace/workspace_service.py, src/api/main.py,
+       frontend/src/pages/Workspace.jsx, Dashboard.jsx, Analyze.jsx, src/api.js
+
+Challenges:
+  - Preventing duplicate bids per RFP while still allowing analysis updates.
+  - WorkspaceBid had no deadline field, so "deadlines this week" couldn't be made
+    real and was replaced with a won/lost breakdown.
+
+
+-------------------------------------------------------------------------------
+6. PROMPT / OUTPUT QUALITY FIXES
+-------------------------------------------------------------------------------
+What was added:
+  - Current date injected into every LLM prompt (config.date_prefix()), so
+    timeline reasoning is anchored to today.
+  - Explicit instructions to flag passed deadlines (Ask answers and the bid
+    submission-deadline assessment) — fixes the model calling a 2025 deadline
+    "ample time" when today is 2026.
+  - Markdown rendering of answers and drafts (react-markdown + remark-gfm +
+    Tailwind typography), so **bold**/lists/headings render instead of raw text;
+    literal <br> tags converted to line breaks.
+  - Requirement extraction cleaned: stricter prompt + a post-filter that drops
+    empty/fragment/heading items and de-duplicates, fixing blank requirement
+    rows from RFPs full of <br> and table markup.
+
+Files: src/config.py, src/generation/generator.py, src/analysis/pre_bid.py,
+       frontend/src/components/ui.jsx, AnalysisReport.jsx, Analyze.jsx,
+       Draft.jsx, tailwind.config.js, package.json
+
+Challenges:
+  - Models put markdown/HTML into structured fields they shouldn't; handled both
+    at the prompt (ask for plain text) and the render layer (clean + markdown).
+  - The model treated past dates as future even with the date present — needed an
+    explicit "say if it has passed" rule, not just the date.
+
+
+-------------------------------------------------------------------------------
+7. RETRIEVAL IMPROVEMENTS
+-------------------------------------------------------------------------------
+What was added:
+  - Text normalization at ingestion: strips PDF page footers ("P a g e 13 | 22"),
+    TOC dotted leaders, de-hyphenates line-wrapped words, collapses whitespace.
+  - Larger chunks (500 -> 900, overlap 50 -> 150) and a boilerplate filter that
+    drops tiny / mostly-separator chunks at index time.
+  - Per-page diversity cap so one page can't dominate the citations.
+  - Cross-encoder RERANKER (sentence-transformers, ms-marco-MiniLM-L-6-v2):
+    over-fetch by embedding similarity, gate, then re-rank by joint
+    query-passage relevance. The cross-encoder score is shown as the citation
+    "% match". Applied to /query and pre-bid coverage.
+
+Files: src/ingestion/parser.py, src/ingestion/chunker.py,
+       src/retrieval/vector_store.py, src/api/main.py, src/analysis/pre_bid.py
+
+Challenges:
+  - Bi-encoder (embedding) similarity ranked keyword-dense boilerplate ABOVE the
+    chunk that actually contained the answer (e.g. the RFP contact). The
+    cross-encoder reranker fixed the ordering (answer chunk jumped to ~99%).
+  - Any change here requires rebuilding the Chroma index (delete chroma_db and
+    re-upload) — embeddings/chunks change.
+  - The reranker downloads a model on first use; wrapped in try/except to fall
+    back to cosine order if unavailable.
+
+
+-------------------------------------------------------------------------------
+8. LLM-AS-A-JUDGE ROBUSTNESS + CHAT MEMORY
+-------------------------------------------------------------------------------
+What was added:
+  - Judge JSON parsing hardened: strips ```fences```, // and /* */ comments, and
+    trailing commas; on truncation, salvages each score and the summary by regex
+    instead of dumping raw JSON / showing all zeros.
+  - /evaluate now uses the SAME two-stage (embedding + reranker) retrieval as
+    /query, so the judge sees exactly the context the answer was grounded in —
+    fixing wrong "context doesn't contain X / citations irrelevant" verdicts.
+  - Conversational memory: the last ~6 turns are sent with each query; follow-ups
+    are condensed into standalone questions for retrieval (history-aware), and
+    prior turns are passed to the LLM as chat messages so it remembers context.
+
+Files: src/generation/judge.py, src/generation/generator.py, src/api/main.py,
+       frontend/src/pages/Ask.jsx, src/api.js
+
+Challenges:
+  - Small/local models emit invalid JSON (comments, truncation) — solved with
+    defensive parsing + regex fallback.
+  - The judge was inaccurate because it re-retrieved its own (different, lower-
+    ranked) context; aligning it with the answer's retrieval was the real fix.
+
+
+-------------------------------------------------------------------------------
+9. ABOUT PAGE + UI POLISH
+-------------------------------------------------------------------------------
+What was added:
+  - New About page (/about) built from the standalone HTML mockup's landing
+    content (sanadai_preview.html): hero, "What SanadAI does" cards, tech-stack
+    grid (corrected to the real stack), and a "Where to start" guide that links to
+    the working pages. Restyled from the mockup's teal to the existing navy/gold
+    Tailwind theme using the shared ui.jsx components.
+  - Logo: the project PNG (frontend/public/download.png) replaces the placeholder
+    Landmark icon in the sidebar, Setup page, and About hero.
+  - Wider content area: Layout max width 5xl -> 7xl.
+  - First-run flow: after Setup ("Go to dashboard"), the app now lands on the
+    About page instead of the dashboard.
+
+Files: frontend/src/pages/About.jsx (new), App.jsx, components/Sidebar.jsx,
+       components/Layout.jsx, pages/Setup.jsx
+
+Challenges:
+  - The mockup logo art is dark navy/teal and was invisible on the navy hero;
+    placed it on a white rounded chip so it shows.
+  - Routing to /about after Setup: navigate() then re-check the KB so the routes
+    mount with the URL already at /about.
+
+
+-------------------------------------------------------------------------------
+10. ADMIN PAGE — RUNTIME LLM CONTROL
+-------------------------------------------------------------------------------
+What was added:
+  - New Admin page (/admin) to swap the active LLM provider/model and the local
+    server URL on the fly, plus system metrics (documents, vector chunks, chat
+    sessions) and a "Test connection" button.
+  - Backend: config gained an in-memory runtime override (_runtime) used by
+    get_llm()/get_llm_provider(); admin_config() reports the provider list, default
+    models, effective model/URL, and which providers have a key set (booleans
+    only). Endpoints: GET/POST /admin/llm and POST /admin/llm/test.
+  - Changes are runtime-only (revert to .env on restart); API keys stay in .env and
+    are never exposed by the API.
+
+Files: src/config.py, src/api/main.py, frontend/src/pages/Admin.jsx (new),
+       App.jsx, components/Sidebar.jsx, src/api.js
+
+Challenges:
+  - Existing call sites pass model=None, so the runtime model override slots in
+    without touching them; switching provider resets the model to the new
+    provider's default.
+  - No auth (local internal tool) — noted for future hardening.
+
+
+-------------------------------------------------------------------------------
+11. BENCHMARKING SUITE (benchmarks/ + golden test)
+-------------------------------------------------------------------------------
+What was added:
+  - New benchmarks/ folder (modeled on notebooks/): standalone, run-from-root
+    scripts that measure each RAG step and write timestamped CSVs to
+    benchmarks/results/.
+      * benchmark_chunking.py   — chunk counts/sizes/time across chunk configs.
+      * benchmark_retrieval.py  — hit@k, MRR, precision@k for basic vs reranked.
+      * benchmark_generation.py — faithfulness + relevance (judge) per setup.
+      * benchmark_rag.py        — the rubric table: LLM Only / Basic RAG /
+        Optimized RAG / RAG + reranking -> Faithfulness, Relevance, Retrieval
+        Precision, Notes.
+      * _utils.py — shared CSV writer, temp-index builder, precision@k, reranked
+        retrieval, golden loader.
+  - Self-contained golden test fixture: benchmarks/sample_kb/ (5 Markdown docs for
+    a fictional "Nimbus Data Solutions") + benchmarks/golden_qa.json (12 QA pairs
+    grounded in those docs). Makes results reproducible and independent of the
+    user's real data/company_kb.
+  - Reuses src.generation.judge.evaluate_answer (faithfulness/relevance) and the
+    cross-encoder reranker; no new dependencies.
+
+Files: benchmarks/_utils.py, benchmark_chunking.py, benchmark_retrieval.py,
+       benchmark_generation.py, benchmark_rag.py, __init__.py, sample_kb/*.md,
+       golden_qa.json; .gitignore (benchmarks/results/)
+
+Challenges:
+  - First results were "terrible" only because evaluation/golden_qa.json referenced
+    documents not present in data/company_kb (retrieval couldn't hit expected
+    sources). The bundled sample KB + golden set fixed this: LLM-Only faithfulness
+    ~1.5 vs RAG setups ~9.4-9.8 — the intended contrast.
+  - "python -m benchmarks.x" vs "python benchmarks/x.py": made benchmarks a package
+    (__init__.py) and import via "from benchmarks import _utils" so both run styles
+    work.
+  - Larger chunks initially showed LOWER precision on tiny docs; expanded each
+    sample doc with more on-topic prose so 1000-char chunks group related content
+    and beat 500-char (precision@3 ~0.53 -> ~0.61) — without changing golden facts.
+
+
+-------------------------------------------------------------------------------
+OPERATIONAL NOTES
+-------------------------------------------------------------------------------
+  - Set LLM_PROVIDER (+ the matching key) in .env. For local, set LOCAL_BASE_URL.
+    The Admin page (/admin) can switch provider/model at runtime (resets on
+    restart).
+  - After any ingestion/retrieval change (section 7), rebuild the index: stop the
+    API, delete chroma_db, restart, re-upload company KB + RFP docs.
+  - Gitignored data: data/workspace.json, data/chat_sessions.json,
+    data/company_kb/*, data/incoming_rfps/*, benchmarks/results/.
+    benchmarks/sample_kb/ + golden_qa.json are tracked (test fixtures).
+  - First Ask query (or benchmark) after restart loads the cross-encoder once
+    (brief delay).
+  - Benchmarks: run e.g. `python benchmarks/benchmark_rag.py` (needs a configured
+    LLM provider); chunking/retrieval need no LLM. CSVs land in benchmarks/results/.

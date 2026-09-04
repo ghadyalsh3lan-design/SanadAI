@@ -1,0 +1,98 @@
+[
+  {
+    "id": "nb_001",
+    "question": "When was Nimbus Data Solutions founded and where is it headquartered?",
+    "ground_truth": "Nimbus Data Solutions was founded in 2017 and is headquartered in Riyadh, Saudi Arabia.",
+    "source_documents": ["nimbus_company_overview.md"],
+    "category": "overview",
+    "notes": "Company overview — founding and HQ"
+  },
+  {
+    "id": "nb_002",
+    "question": "How many people does Nimbus employ and in which cities are its offices?",
+    "ground_truth": "Nimbus employs 240 people across three offices: Riyadh, Dubai, and Cairo.",
+    "source_documents": ["nimbus_company_overview.md"],
+    "category": "overview",
+    "notes": "Company overview — headcount and offices"
+  },
+  {
+    "id": "nb_003",
+    "question": "Which sectors does Nimbus Data Solutions serve?",
+    "ground_truth": "Nimbus serves four primary sectors: government and public services, healthcare, banking and financial services, and telecommunications.",
+    "source_documents": ["nimbus_company_overview.md"],
+    "category": "overview",
+    "notes": "Company overview — sectors"
+  },
+  {
+    "id": "nb_004",
+    "question": "What are the four core service lines Nimbus provides?",
+    "ground_truth": "Nimbus provides four core services: cloud migration, data platform engineering, machine learning and AI, and managed operations.",
+    "source_documents": ["nimbus_capabilities.md"],
+    "category": "capability",
+    "notes": "Capabilities — service lines"
+  },
+  {
+    "id": "nb_005",
+    "question": "Which security and quality certifications does Nimbus hold?",
+    "ground_truth": "Nimbus holds ISO 27001 (Information Security, since 2020), ISO 9001 (Quality, since 2019), and SOC 2 Type II (attested annually).",
+    "source_documents": ["nimbus_capabilities.md"],
+    "category": "certification",
+    "notes": "Capabilities — certifications"
+  },
+  {
+    "id": "nb_006",
+    "question": "What is Nimbus's primary cloud provider and main data platform technology?",
+    "ground_truth": "Nimbus's primary cloud provider is Amazon Web Services (AWS), and its main data platform technologies include Databricks, Apache Spark, and Snowflake.",
+    "source_documents": ["nimbus_capabilities.md"],
+    "category": "capability",
+    "notes": "Capabilities — tech stack"
+  },
+  {
+    "id": "nb_007",
+    "question": "What partnership tiers does Nimbus have with AWS and Databricks?",
+    "ground_truth": "Nimbus is an AWS Advanced Consulting Partner and a Databricks Registered Partner.",
+    "source_documents": ["nimbus_capabilities.md"],
+    "category": "partner",
+    "notes": "Capabilities — partnerships"
+  },
+  {
+    "id": "nb_008",
+    "question": "What outcome did Nimbus achieve on the fraud detection project for Gulf Commercial Bank?",
+    "ground_truth": "For Gulf Commercial Bank in 2023, Nimbus's real-time fraud detection pipeline detected 38% more fraudulent transactions while cutting false positives by 22%, saving an estimated 47 million SAR in the first year.",
+    "source_documents": ["nimbus_case_studies.md"],
+    "category": "case_study",
+    "notes": "Case studies — fraud detection"
+  },
+  {
+    "id": "nb_009",
+    "question": "What did Nimbus deliver for the Ministry of Health and what was the result?",
+    "ground_truth": "In 2022 Nimbus built a centralized data lake consolidating 14 hospital systems for the Ministry of Health, reducing cross-hospital reporting time from 9 days to under 4 hours and enabling a national dashboard used by 1,200 staff.",
+    "source_documents": ["nimbus_case_studies.md"],
+    "category": "case_study",
+    "notes": "Case studies — national health data platform"
+  },
+  {
+    "id": "nb_010",
+    "question": "Who leads Nimbus's AI practice and what are their qualifications?",
+    "ground_truth": "Dr. Sara Mansour leads the Generative AI Center of Excellence. She holds a PhD in Machine Learning from KAUST and has 11 years of experience and 9 peer-reviewed publications.",
+    "source_documents": ["nimbus_team.md"],
+    "category": "cv",
+    "notes": "Team — Head of AI"
+  },
+  {
+    "id": "nb_011",
+    "question": "What are Nimbus's platform availability and P1 incident response targets?",
+    "ground_truth": "Nimbus targets 99.9% platform availability per calendar month and a 30-minute response time for critical (P1) incidents.",
+    "source_documents": ["nimbus_policies.md"],
+    "category": "policy",
+    "notes": "Policies — SLA targets"
+  },
+  {
+    "id": "nb_012",
+    "question": "What delivery methodology does Nimbus use?",
+    "ground_truth": "Nimbus delivers projects using an Agile (Scrum) methodology with two-week sprints, governed by a central Project Management Office (PMO), including a discovery phase, iterative delivery, and a formal handover with documentation.",
+    "source_documents": ["nimbus_policies.md"],
+    "category": "methodology",
+    "notes": "Policies — delivery methodology"
+  }
+]

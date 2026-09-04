@@ -1,0 +1,162 @@
+[
+  {
+    "id": "qa_001",
+    "question": "What methodology does IBTech follow for project management?",
+    "ground_truth": "IBTech follows the PMI Methodology and has also developed its own seven-step approach, in addition to its field-proven Program Management Framework which includes a Central PMO.",
+    "source_documents": ["Jouf University Proposal by IBTech v2.0.docx"],
+    "category": "methodology",
+    "notes": "Confirmed from KB — PMI + IBTech 7-step approach (Appendix A)"
+  },
+  {
+    "id": "qa_002",
+    "question": "What are the steps in IBTech's seven-step project delivery approach?",
+    "ground_truth": "IBTech's seven-step approach consists of: (1) Risk Assessment, (2) Program Assimilation, (3) Define, (4) Setup, (5) Plan, (6) Track, and (7) Handover.",
+    "source_documents": ["Jouf University Proposal by IBTech v2.0.docx"],
+    "category": "methodology",
+    "notes": "Confirmed from KB Appendix A (English PM methodology section)"
+  },
+  {
+    "id": "qa_003",
+    "question": "How does IBTech handle change management in its engagements?",
+    "ground_truth": "IBTech manages change through formal evaluation of change impact and associated risks, Change Advisory coordination when required, execution within approved maintenance windows, post-implementation validation and documentation, and complete traceability of all change activities.",
+    "source_documents": ["Jouf University Proposal by IBTech v2.0.docx"],
+    "category": "methodology",
+    "notes": "Confirmed from KB — ITSM section, Change Management"
+  },
+  {
+    "id": "qa_004",
+    "question": "What is IBTech's approach to release and patch management?",
+    "ground_truth": "IBTech coordinates security and feature updates across systems, tests updates in controlled staging environments prior to deployment, applies a structured rollout plan to minimize operational risk, and measures compliance against agreed patching targets.",
+    "source_documents": ["Jouf University Proposal by IBTech v2.0.docx"],
+    "category": "methodology",
+    "notes": "Confirmed from KB — ITSM section, Release & Patch Management"
+  },
+  {
+    "id": "qa_005",
+    "question": "How does IBTech track and report on SLA compliance?",
+    "ground_truth": "IBTech tracks SLA compliance and reports on it, measuring availability per service tower, analysing incident trends, and presenting results through executive dashboards and operational review meetings. It also measures compliance against agreed patching targets.",
+    "source_documents": ["Jouf University Proposal by IBTech v2.0.docx"],
+    "category": "compliance",
+    "notes": "Confirmed from KB — ITSM Performance Monitoring & Reporting"
+  },
+  {
+    "id": "qa_006",
+    "question": "What performance monitoring and reporting does IBTech provide?",
+    "ground_truth": "IBTech provides SLA compliance tracking and reporting, availability measurement per service tower, incident trend analysis and performance metrics, executive dashboards and operational review meetings, and continuous-improvement recommendations based on operational data.",
+    "source_documents": ["Jouf University Proposal by IBTech v2.0.docx"],
+    "category": "outcomes",
+    "notes": "Confirmed from KB — ITSM Performance Monitoring & Reporting"
+  },
+  {
+    "id": "qa_007",
+    "question": "What post-delivery support and maintenance services does IBTech include?",
+    "ground_truth": "IBTech's post-delivery support includes: tracking of Moves, Adds, and Changes (MAC activities); annual inventory validation and periodic reconciliation; Change Management with formal impact evaluation and post-implementation validation; Release and Patch Management; and Performance Monitoring and Reporting including SLA compliance tracking and executive dashboards.",
+    "source_documents": ["Jouf University Proposal by IBTech v2.0.docx"],
+    "category": "support",
+    "notes": "Confirmed from KB — detailed answer available"
+  },
+  {
+    "id": "qa_008",
+    "question": "What quality assurance and testing processes does IBTech follow before deployment?",
+    "ground_truth": "IBTech tests changes in controlled staging environments prior to deployment, as part of its Release and Patch Management process.",
+    "source_documents": ["Jouf University Proposal by IBTech v2.0.docx"],
+    "category": "methodology",
+    "notes": "Confirmed from KB"
+  },
+  {
+    "id": "qa_009",
+    "question": "What are Work Product Descriptions (WPDs) and how does IBTech use them?",
+    "ground_truth": "Standard technical Work Product Descriptions (WPDs) define the artefacts the team should produce to successfully deliver an engagement.",
+    "source_documents": ["Jouf University Proposal by IBTech v2.0.docx"],
+    "category": "deliverables",
+    "notes": "Confirmed from KB — Step 5 Plan, Appendix A"
+  },
+  {
+    "id": "qa_010",
+    "question": "How does IBTech manage risk in its projects?",
+    "ground_truth": "IBTech identifies and documents project risks and issues, analyses and prioritises them by potential impact, plans mitigation strategies with assigned owners, tracks and reports risk status, escalates high-impact risks beyond the team to project sponsors, and continuously monitors and reviews the effectiveness of its risk procedures. The engagement also begins with a risk-assessment diagnostic using IBTech's 7 keys framework.",
+    "source_documents": ["Jouf University Proposal by IBTech v2.0.docx"],
+    "category": "methodology",
+    "notes": "Confirmed from KB — Risk & Issue Management section + Step 1"
+  },
+  {
+    "id": "qa_011",
+    "question": "What does IBTech's Central PMO do?",
+    "ground_truth": "The Central PMO forms the core of IBTech's project management framework and manages three critical areas: Program Management, Project Management, and Program Support.",
+    "source_documents": ["Jouf University Proposal by IBTech v2.0.docx"],
+    "category": "methodology",
+    "notes": "Confirmed from KB — Appendix A, Program Management Framework"
+  },
+  {
+    "id": "qa_012",
+    "question": "How does IBTech handle inventory and asset management in its engagements?",
+    "ground_truth": "IBTech continuously updates asset records and configuration items, tracks Moves, Adds, and Changes (MAC), performs annual inventory validation and periodic reconciliation, and maps assets to dependent services for impact analysis, all maintained in a configuration management database (CMDB).",
+    "source_documents": ["Jouf University Proposal by IBTech v2.0.docx"],
+    "category": "support",
+    "notes": "Confirmed from KB — ITSM Asset & Configuration Management"
+  },
+  {
+    "id": "qa_013",
+    "question": "What is IBTech's process for managing incidents and service requests?",
+    "ground_truth": "IBTech centrally logs and categorises incidents and service requests, applies priority-based triage aligned with SLA thresholds, uses a defined escalation matrix (L1 to L2 to L3), performs root cause analysis for recurring or major incidents, and documents solutions in a knowledge base to speed future resolution.",
+    "source_documents": ["Jouf University Proposal by IBTech v2.0.docx"],
+    "category": "support",
+    "notes": "Confirmed from KB — ITSM Incident & Service Request Management"
+  },
+  {
+    "id": "qa_014",
+    "question": "How does IBTech structure the planning phase of a project?",
+    "ground_truth": "In the planning phase (Step 5), IBTech uses standard Work Product Descriptions (WPDs) to define the artefacts the team must produce and standard Work Breakdown Structures (WBS) to structure the project into phases, activities, and tasks. Planning integrates control, planning, and reporting across the program, and includes identifying project interdependencies and reviewing resource requirements.",
+    "source_documents": ["Jouf University Proposal by IBTech v2.0.docx"],
+    "category": "methodology",
+    "notes": "Confirmed from KB — Appendix A, Step 5 Plan"
+  },
+  {
+    "id": "qa_015",
+    "question": "What project governance reporting does IBTech provide to clients?",
+    "ground_truth": "IBTech establishes a program management reporting structure and provides daily, weekly, and monthly reports covering ticket and service-request summaries, SLA and KPI compliance, asset status, implemented changes, and risks, along with periodic review meetings (weekly, monthly, and quarterly) with the client.",
+    "source_documents": ["Jouf University Proposal by IBTech v2.0.docx"],
+    "category": "methodology",
+    "notes": "Confirmed from KB — reporting framework + Step 3 reporting structure"
+  },
+  {
+    "id": "qa_016",
+    "question": "What AI or machine learning services has IBTech delivered?",
+    "ground_truth": "IBTech's AI and Machine Learning practice delivers predictive analytics and forecasting, natural language processing (Arabic and English), retrieval-augmented generation (RAG) knowledge assistants, computer vision, and MLOps/LLMOps. Representative work includes a machine-learning incident-classification and triage component for the Ministry of Interior Unified Operations Centers (911), a computer-vision proof of concept for NEOM, geospatial analytics and a smart data warehouse for NEOM public safety, and an internal RAG knowledge platform over the firm's past proposals.",
+    "source_documents": ["IBTech_AI_ML_Capability.md", "Jouf University Proposal by IBTech v2.0.docx"],
+    "category": "capabilities",
+    "notes": "Answerable from AI capability statement; NEOM analytics/data-warehouse also in KB project tables"
+  },
+  {
+    "id": "qa_017",
+    "question": "What data engineering or analytics work has IBTech done?",
+    "ground_truth": "IBTech's data practice delivers data integration and API platforms, ETL/ELT pipelines (Apache Airflow and Spark), data warehousing and lakehouse architectures, and business-intelligence dashboards (Power BI). Representative work includes developing and operating an API Gateway platform for the Real Estate Registry, integration and advanced digital solutions with BI reporting for the Ministry of Interior 911 centers (on the Incorta platform), enterprise integration and a smart data warehouse for NEOM, and an integration-management platform for the Nuclear and Radiological Regulatory Commission.",
+    "source_documents": ["IBTech_Data_Analytics_Capability.md", "Jouf University Proposal by IBTech v2.0.docx"],
+    "category": "capabilities",
+    "notes": "Answerable from data capability statement; Incorta/API-gateway/data-warehouse also in KB project tables"
+  },
+  {
+    "id": "qa_018",
+    "question": "What cloud infrastructure experience does IBTech have?",
+    "ground_truth": "IBTech delivers cloud and hybrid infrastructure across Oracle Cloud Infrastructure (OCI) and Microsoft Azure, with Nutanix virtualization, cloud migration, Infrastructure as Code (Terraform), and high-availability and disaster-recovery designs targeting 99%-99.5% availability. For Jouf University it operates a hybrid environment spanning a primary data center and a disaster-recovery site, Nutanix virtualization, Oracle databases, and OCI integration under a 24/7 model.",
+    "source_documents": ["IBTech_Cloud_Capability.md", "Jouf University Proposal by IBTech v2.0.docx"],
+    "category": "technology",
+    "notes": "Answerable from cloud capability statement; OCI/Nutanix/DR also in Jouf proposal"
+  },
+  {
+    "id": "qa_019",
+    "question": "What training or capacity building programs has IBTech delivered?",
+    "ground_truth": "IBTech delivers instructor-led and blended technical training in software engineering, data, cloud, and AI; engaging programs for university students to prepare them for the digital era; role-based upskilling for client staff; and structured knowledge transfer (documented SOPs, a maintained knowledge base, and a Shadow to Reverse Shadow to Full Ownership handover) embedded in its managed-services engagements.",
+    "source_documents": ["IBTech_Training_CapacityBuilding_Capability.md"],
+    "category": "capabilities",
+    "notes": "Answerable from training & capacity-building capability statement"
+  },
+  {
+    "id": "qa_020",
+    "question": "What sectors and industries has IBTech worked in?",
+    "ground_truth": "IBTech has worked across government and public security (Ministry of Interior Unified Operations Centers / 911 in Riyadh, Dammam, and Madinah), regulatory bodies (Nuclear and Radiological Regulatory Commission), giga-projects (NEOM, including Sindalah Island), real estate and PIF companies (Real Estate Registry), higher education (Jouf University and KFUPM), and municipalities (Hail smart-city platform), among other sectors.",
+    "source_documents": ["IBTech_Company_Overview_Sectors.md", "Jouf University Proposal by IBTech v2.0.docx"],
+    "category": "sector_experience",
+    "notes": "Answerable from company overview; client list also in KB project tables"
+  }
+]
